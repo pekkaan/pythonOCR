@@ -11,3 +11,5 @@ Requirements:
 -Poppler for Windows (included in bin directory)
 
 When installing Tesseract, include Finnish.
+
+Add Tesseract to PATH (Usually C:\Users\<User>\AppData\Local\Tesseract-OCR)
