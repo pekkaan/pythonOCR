@@ -95,7 +95,7 @@ class PythonOCR:
         results = []
         page_number = 1
         for image in images:
-            text_in_image = pytesseract.image_to_string(image, lang="eng")
+            text_in_image = pytesseract.image_to_string(image, lang="eng+fin")
 
             # In order to find multiple instances of the word in text,
             # "if word in text_in_image:" is not sufficient.
@@ -131,7 +131,7 @@ class PythonOCR:
         results = []
         page_number = 1
         for image in images:
-            image_data = pytesseract.image_to_data(image, lang="eng", output_type=Output.DICT)
+            image_data = pytesseract.image_to_data(image, lang="eng+fin", output_type=Output.DICT)
             # Image data is a dictionary of lists.
             # Accessing specific data list in dictionary:  image_data[<dictionary_key>]
             # Accessing specific data in a list, by index: image_data[<dictionary_key>][<index>]
@@ -166,7 +166,7 @@ class PythonOCR:
         """
         if not self.is_image(image_path):
             return
-        text_in_image = pytesseract.image_to_string(image_path, lang="eng")
+        text_in_image = pytesseract.image_to_string(image_path, lang="eng+fin")
         if word in text_in_image:
             return True
         else:
