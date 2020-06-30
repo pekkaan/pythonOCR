@@ -35,6 +35,8 @@ class PythonOCR:
         Cleans the text in 'line' by cutting extra characters and words before
         and after the specified word.
         Precondition: 'line' must contain 'word'.
+
+        :return: Text line.
         """
         # Get index of the last space, " ", before the word.
         new_beginning = line.find(word)
@@ -53,7 +55,9 @@ class PythonOCR:
     def validate_file(self, file_path):
         """
         Verifies that a given filename is .jpg, .jpeg, .png or .pdf -file.
-        Converts PDF-file to a list of images.
+        Converts PDF-file to images: each page into its own image.
+
+        :return: A list of image files.
         """
         images = []
         if not self.is_image(file_path) and ".pdf" not in file_path:
@@ -73,13 +77,15 @@ class PythonOCR:
         """
         Searches for all instances of a specified word in PDF or image file.
         Converts a PDF-file to image(s), and recognizes the text in image(s) with pytesseract.
-        Returns None if file_path argument is not a .pdf, .jpg, .jpeg nor .png -file.
+        Upper and lowercase sensitive!
 
         :param word: The specified word. Required.
         :type word: str
         :param file_path: PDF or image file path. Required.
         :type file_path: str
         :return: A list of found instances of the specified word.
+                A list of tuples, consisting of: (found text, page number).
+                Returns None if file is not a .pdf, .jpg, .jpeg nor .png -file.
         :rtype: list
         """
         images = self.validate_file(file_path)
@@ -87,6 +93,7 @@ class PythonOCR:
             return
 
         results = []
+        page_number = 1
         for image in images:
             text_in_image = pytesseract.image_to_string(image, lang="eng")
 
@@ -97,21 +104,24 @@ class PythonOCR:
                 if word in line:
                     # Clean the line where the word was found.
                     cleaned_line = self.clean_line(line, word)
-                    results.append(cleaned_line)
+                    results.append((cleaned_line, page_number))
+            page_number += 1
         return results
 
     def find_coordinates(self, word, file_path):
         """
         Searches for all instances of a specified word and it's coordinates in PDF or image file.
         Converts a PDF-file to image(s), and recognizes the text in image(s) with pytesseract.
-        Returns None if file_path argument is not a .pdf, .jpg, .jpeg nor .png -file.
+        Upper and lowercase sensitive!
 
         :param word: The specified word. Required.
         :type word: str
         :param file_path: PDF or image file path. Required.
         :type file_path: str
-        :return: Found instances of the word and word coordinates in image.
-            A list of tuples, containing (found text, left coordinates, top coordinates, text width, text height)
+        :return: Found instances of the word and their coordinates in image.
+                A list of tuples, consisting of: (found text, left coordinates (X), top coordinates (Y),
+                text width, text height, page number).
+                Returns None if file is not a .pdf, .jpg, .jpeg nor .png -file.
         :rtype: list
         """
         images = self.validate_file(file_path)
@@ -119,6 +129,7 @@ class PythonOCR:
             return
 
         results = []
+        page_number = 1
         for image in images:
             image_data = pytesseract.image_to_data(image, lang="eng", output_type=Output.DICT)
             # Image data is a dictionary of lists.
@@ -133,22 +144,24 @@ class PythonOCR:
                     width = image_data["width"][index]
                     height = image_data["height"][index]
 
-                    results.append((text, x_coord, y_coord, width, height))
+                    results.append((text, x_coord, y_coord, width, height, page_number))
                     # Keskipisteen laskeminen ja vieminen 'results'-listaan:
-                    # results.append((text, x_coord + width/2, y_coord + height/2))
+                    # results.append((text, x_coord, y_coord, x_coord + width/2, y_coord + height/2, page_number))
+            page_number += 1
         return results
 
     def verify_word(self, word, image_path):
         """
         Searches any instance of a specified word in image file.
         Recognizes the text in image with pytesseract.
-        Returns None if image_path argument is not a .jpg, .jpeg nor .png -file.
+        Upper and lowercase sensitive!
 
         :param word: The specified word. Required.
         :type word: str
         :param image_path: Image file path. Required.
         :type image_path: str
         :return: Returns True if found at least one instance of specified word in image, False if none.
+                Returns None if image is not a .jpg, .jpeg nor .png -file.
         :rtype: bool
         """
         if not self.is_image(image_path):
