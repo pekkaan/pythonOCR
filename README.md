@@ -44,14 +44,16 @@ More infromation at: https://pypi.org/project/pytesseract/
 
 ## Installing
 
-Installing PythonOCR. WIP
+WIP Download pythonOCR.
 
 ## Usage
 
-Include PythonOCR library in your code:
+Add pythonOCR directory to your project directory.
+
+Include PythonOCR class in your code:
 
 ```
-import pythonocr
+from pythonOCR.python_ocr import PythonOCR
 ```
 
 Create a PythonOCR class object:
