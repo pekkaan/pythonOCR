@@ -1,4 +1,5 @@
-import os
+import inspect
+import os.path
 import pdf2image
 import pytesseract
 from pytesseract import Output
@@ -55,7 +56,7 @@ class PythonOCR:
     def validate_file(self, file_path):
         """
         Verifies that a given filename is .jpg, .jpeg, .png or .pdf -file.
-        Converts PDF-file to images: each page into its own image.
+        Converts PDF-file to images: each page into its own image. Returns valid image(s).
 
         :return: A list of image files.
         """
@@ -63,11 +64,19 @@ class PythonOCR:
         if not self.is_image(file_path) and ".pdf" not in file_path:
             return
         elif ".pdf" in file_path:
-            images_output = os.path.join(os.getcwd(), "images")
-            bin_path = os.path.join(os.getcwd(), "bin")
+            # Get the pythonOCR (this) directory, as passing poppler files directory to pdf2image relies on it.
+            filename = inspect.getframeinfo(inspect.currentframe()).filename
+            this_directory = os.path.dirname(os.path.abspath(filename))
+
+            output_directory = os.path.join(this_directory, "images")
+            poppler_directory = os.path.join(this_directory, "bin")
+
             # Variable 'images' will be an array of images from the pages of PDF-file.
             # Array elements of 'images' will be image file paths.
-            images = pdf2image.convert_from_path(file_path, fmt="jpeg", output_folder=images_output, poppler_path=bin_path)
+            images = pdf2image.convert_from_path(file_path, fmt="jpeg",
+                                                 output_folder=output_directory,
+                                                 poppler_path=poppler_directory
+                                                 )
         elif self.is_image(file_path):
             images = file_path
         return images
