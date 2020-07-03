@@ -1,35 +1,18 @@
 # pythonOCR
 
-Requirements:
+Library for finding and locating words in PDF or image files.
 
--pytesseract https://pypi.org/project/pytesseract/
+## Prerequisites
 
--pdf2image https://pypi.org/project/pdf2image/
+PythonOCR utilizes Tesseract OCR to recognize text in image files. pdf2image is used to convert PDF files into images.
 
--Tesseract https://github.com/UB-Mannheim/tesseract/wiki (Windows 64-bit)
+### Python
 
--Poppler for Windows (included in bin directory)
+Install Python (3.5+) and include pip with the installation. **Add Python to PATH.**
 
-When installing Tesseract, include Finnish.
+Download Python: https://www.python.org/downloads/
 
-Add Tesseract to PATH (Usually C:\Users\<User>\AppData\Local\Tesseract-OCR)
-
-# pythonOCR
-
-Description. ...for finding and locating words in PDF or image files.
-
-
-### Prerequisites
-
-**Python**
-
-Install Python (3.5+), add it to PATH and include pip with the installation.
-
-https://www.python.org/downloads/
-
-pip
-
-**pdf2image**
+### pdf2image
 
 Install pdf2image using pip:
 
@@ -37,15 +20,19 @@ Install pdf2image using pip:
 pip install pdf2image
 ```
 
-https://pypi.org/project/pdf2image/
+More information at: https://pypi.org/project/pdf2image/
 
-_NOTE:_ poppler will be included in the /bin directory.
+_NOTE:_ poppler will be included with PythonOCR, in the /bin directory.
 
-**Google Tesseract OCR**
+### Tesseract OCR
 
 Install Tesseract OCR and include Finnish. Add it to PATH.
 
-**pytesseract**
+Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
+
+More information at: https://github.com/tesseract-ocr/tessdoc
+
+### pytesseract
 
 Install pytesseract using pip:
 
@@ -53,15 +40,21 @@ Install pytesseract using pip:
 pip install pytesseract
 ```
 
-https://pypi.org/project/pytesseract/
+More infromation at: https://pypi.org/project/pytesseract/
 
+## Installing
 
-### Installing
-
+Installing PythonOCR. WIP
 
 ## Usage
 
-In your code, create a class object:
+Include PythonOCR library in your code:
+
+```
+import pythonocr
+```
+
+Create a PythonOCR class object:
 
 ```
 my_object = PythonOCR()
@@ -80,5 +73,7 @@ my_object.verify_word(<word>, <file path>)
 Example:
 
 ```
-my_object.find_words("", "my_file.pdf")
+print(
+  my_object.find_words("Example", "my_file.pdf")
+  )
 ```
