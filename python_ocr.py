@@ -25,6 +25,13 @@ class PythonOCR:
     (Other class functions are intended to be used by these main functions.)
     """
 
+    def get_this_dir(self):
+        """
+        :return: PythonOCR directory.
+        """
+        filename = inspect.getframeinfo(inspect.currentframe()).filename
+        return os.path.dirname(os.path.abspath(filename))
+
     def is_image(self, file_path):
         if ".jpg" or ".jpeg" or ".png" in file_path:
             return True
@@ -53,7 +60,7 @@ class PythonOCR:
 
         return line[new_beginning:new_end]
 
-    def validate_file(self, file_path):
+    def validate_file(self, file_path, output_path):
         """
         Verifies that a given filename is .jpg, .jpeg, .png or .pdf -file.
         Converts PDF-file to images: each page into its own image. Returns valid image(s).
@@ -65,16 +72,12 @@ class PythonOCR:
             return
         elif ".pdf" in file_path:
             # Get the pythonOCR (this) directory, as passing poppler files directory to pdf2image relies on it.
-            filename = inspect.getframeinfo(inspect.currentframe()).filename
-            this_directory = os.path.dirname(os.path.abspath(filename))
-
-            output_directory = os.path.join(this_directory, "images")
-            poppler_directory = os.path.join(this_directory, "bin")
+            poppler_directory = os.path.join(self.get_this_dir(), "bin")
 
             # Variable 'images' will be an array of images from the pages of PDF-file.
             # Array elements of 'images' will be image file paths.
             images = pdf2image.convert_from_path(file_path, fmt="jpeg",
-                                                 output_folder=output_directory,
+                                                 output_folder=output_path,
                                                  poppler_path=poppler_directory
                                                  )
         elif self.is_image(file_path):
@@ -82,7 +85,7 @@ class PythonOCR:
         return images
 
     # MAIN FUNCTIONS:
-    def find_words(self, word, file_path):
+    def find_words(self, word, file_path, output_path=""):
         """
         Searches for all instances of a specified word in PDF or image file.
         Converts a PDF-file to image(s), and recognizes the text in image(s) with pytesseract.
@@ -92,12 +95,14 @@ class PythonOCR:
         :type word: str
         :param file_path: PDF or image file path. Required.
         :type file_path: str
+        :param output_path: Output directory for image files. Required if processing a PDF file.
+        :type output_path: str
         :return: A list of found instances of the specified word.
                 A list of tuples, consisting of: (found text, page number).
                 Returns None if file is not a .pdf, .jpg, .jpeg nor .png -file.
         :rtype: list
         """
-        images = self.validate_file(file_path)
+        images = self.validate_file(file_path, output_path)
         if not images:
             return
 
@@ -117,7 +122,7 @@ class PythonOCR:
             page_number += 1
         return results
 
-    def find_coordinates(self, word, file_path):
+    def find_coordinates(self, word, file_path, output_path=""):
         """
         Searches for all instances of a specified word and it's coordinates in PDF or image file.
         Converts a PDF-file to image(s), and recognizes the text in image(s) with pytesseract.
@@ -127,13 +132,15 @@ class PythonOCR:
         :type word: str
         :param file_path: PDF or image file path. Required.
         :type file_path: str
+        :param output_path: Output directory for image files. Required if processing a PDF file.
+        :type output_path: str
         :return: Found instances of the word and their coordinates in image.
                 A list of tuples, consisting of: (found text, left coordinates (X), top coordinates (Y),
                 text width, text height, page number).
                 Returns None if file is not a .pdf, .jpg, .jpeg nor .png -file.
         :rtype: list
         """
-        images = self.validate_file(file_path)
+        images = self.validate_file(file_path, output_path)
         if not images:
             return
 
