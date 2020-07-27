@@ -26,7 +26,7 @@ _NOTE:_ poppler will be included with PythonOCR, in the /bin directory.
 
 ### Tesseract OCR
 
-Install Tesseract OCR and include Finnish. Add it to PATH.
+Install Tesseract OCR and include Finnish. **Add Tesseract-OCR to PATH.**
 
 Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
 
