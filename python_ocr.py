@@ -81,7 +81,7 @@ class PythonOCR:
                                                  poppler_path=poppler_directory
                                                  )
         elif self.is_image(file_path):
-            images = file_path
+            images.append(file_path)
         return images
 
     # MAIN FUNCTIONS:
