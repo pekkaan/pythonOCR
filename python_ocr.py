@@ -1,6 +1,7 @@
 import inspect
 import os.path
 import pdf2image
+import pyautogui
 import pytesseract
 from pytesseract import Output
 from pdf2image.exceptions import (
@@ -12,9 +13,11 @@ from pdf2image.exceptions import (
 
 class PythonOCR:
     """
-    PythonOCR class contains functions for finding and locating words in PDF or image files.
+    PythonOCR class contains methods for finding and locating words in PDF or image files.
 
-    Class functions:
+    Class methods:
+
+    click_word: Searches for a word on screen and clicks it's location.
 
     find_words: Searches for a word in PDF or image file.
 
@@ -22,7 +25,7 @@ class PythonOCR:
 
     verify_word: Verifies, if image file contains any instance of a word.
 
-    (Other class functions are intended to be used by these main functions.)
+    (Other class methods are intended to be used by these main methods.)
     """
 
     def get_this_dir(self):
@@ -38,6 +41,7 @@ class PythonOCR:
         else:
             return False
 
+    # DEPRECATED METHOD
     def clean_line(self, line, word):
         """
         Cleans the text in 'line' by cutting extra characters and words before
@@ -70,6 +74,8 @@ class PythonOCR:
         images = []
         if not self.is_image(file_path) and ".pdf" not in file_path:
             return
+        elif self.is_image(file_path):
+            images.append(file_path)
         elif ".pdf" in file_path:
             # Get the pythonOCR (this) directory, as passing poppler files directory to pdf2image relies on it.
             poppler_directory = os.path.join(self.get_this_dir(), "bin")
@@ -80,22 +86,61 @@ class PythonOCR:
                                                  output_folder=output_path,
                                                  poppler_path=poppler_directory
                                                  )
-        elif self.is_image(file_path):
-            images.append(file_path)
         return images
 
-    # MAIN FUNCTIONS:
-    def find_words(self, word, file_path, output_path=""):
+    # MAIN METHODS:
+    def click_word(self, word):
+        """
+        Locates a specified word on screen and clicks the word's location. Takes a screenshot using pyautogui
+        and recognizes text in it with pytesseract. If able to find a single instance of the word, retrieves it's
+        coordinates and clicks the location with mouse, using pyautogui.
+        Unable to click the word's location if multiple instances of the word are found on screen.
+
+        :param word: The specified word. Required. Upper and lowercase sensitive!
+        """
+        found_single_instance = False
+        x_coord = 0
+        y_coord = 0
+        width = 0
+        height = 0
+
+        screenshot = pyautogui.screenshot()
+        image_data = pytesseract.image_to_data(screenshot, lang="eng+fin", output_type=Output.DICT)
+        # Image data is a dictionary of lists.
+        # Accessing specific data list in dictionary:  image_data[<dictionary_key>]
+        # Accessing specific data in a list, by index: image_data[<dictionary_key>][<index>]
+        number_of_items = len(image_data["level"])
+        for index in range(number_of_items):
+            text = image_data["text"][index]
+
+            if word in text and not found_single_instance:
+                x_coord = image_data["left"][index]
+                y_coord = image_data["top"][index]
+                width = image_data["width"][index]
+                height = image_data["height"][index]
+                found_single_instance = True
+
+            elif word in text and found_single_instance:
+                print("PythonOCR method: click_word({param}): Found multiple instances of the word ({param}) on screen!"
+                      .format(param=word))
+                return
+
+        # Click coordinates.
+        if found_single_instance:
+            pyautogui.moveTo(x_coord + width/2, y_coord + height/2, 0)
+            pyautogui.click()
+
+    def find_words(self, word, file_path, output_path="./"):
         """
         Searches for all instances of a specified word in PDF or image file.
         Converts a PDF-file to image(s), and recognizes the text in image(s) with pytesseract.
-        Upper and lowercase sensitive!
 
-        :param word: The specified word. Required.
+        :param word: The specified word. Required. Upper and lowercase sensitive!
         :type word: str
-        :param file_path: PDF or image file path. Required.
+        :param file_path: PDF or image file path. Can be absolute or relative to pythonOCR directory. Required.
         :type file_path: str
-        :param output_path: Output directory for image files. Required if processing a PDF file.
+        :param output_path: Output directory for image files. Recommended if processing a PDF file,
+        by default pythonOCR directory.
         :type output_path: str
         :return: A list of found instances of the specified word.
                 A list of tuples, consisting of: (found text, page number).
@@ -116,23 +161,23 @@ class PythonOCR:
             text_array = text_in_image.splitlines()
             for line in text_array:
                 if word in line:
-                    # Clean the line where the word was found.
-                    cleaned_line = self.clean_line(line, word)
-                    results.append((cleaned_line, page_number))
+                    # Clean the line where the word was found.  DEPRECATED
+                    # cleaned_line = self.clean_line(line, word)  DEPRECATED
+                    results.append((line, page_number))
             page_number += 1
         return results
 
-    def find_coordinates(self, word, file_path, output_path=""):
+    def find_coordinates(self, word, file_path, output_path="./"):
         """
         Searches for all instances of a specified word and it's coordinates in PDF or image file.
         Converts a PDF-file to image(s), and recognizes the text in image(s) with pytesseract.
-        Upper and lowercase sensitive!
 
-        :param word: The specified word. Required.
+        :param word: The specified word. Required. Upper and lowercase sensitive!
         :type word: str
-        :param file_path: PDF or image file path. Required.
+        :param file_path: PDF or image file path. Can be absolute or relative to pythonOCR directory. Required.
         :type file_path: str
-        :param output_path: Output directory for image files. Required if processing a PDF file.
+        :param output_path: Output directory for image files. Recommended if processing a PDF file,
+        by default pythonOCR directory.
         :type output_path: str
         :return: Found instances of the word and their coordinates in image.
                 A list of tuples, consisting of: (found text, left coordinates (X), top coordinates (Y),
@@ -170,11 +215,10 @@ class PythonOCR:
         """
         Searches any instance of a specified word in image file.
         Recognizes the text in image with pytesseract.
-        Upper and lowercase sensitive!
 
-        :param word: The specified word. Required.
+        :param word: The specified word. Required. Upper and lowercase sensitive!
         :type word: str
-        :param image_path: Image file path. Required.
+        :param image_path: Image file path. Can be absolute or relative to pythonOCR directory. Required.
         :type image_path: str
         :return: Returns True if found at least one instance of specified word in image, False if none.
                 Returns None if image is not a .jpg, .jpeg nor .png -file.
