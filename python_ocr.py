@@ -1,3 +1,8 @@
+"""
+LEGACY CODE
+New: pythonocr.py
+"""
+
 import inspect
 import os.path
 import pdf2image
