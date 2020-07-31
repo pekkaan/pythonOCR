@@ -3,7 +3,7 @@ PythonOCR contains functions for finding and locating words on screen, in image 
 
 Main functions:
 
-    click_word(): Searches for a word on screen and clicks it's location.
+    click_word(): Searches for a word on screen and clicks its location.
 
     find_words(): Searches for all instances of a word in image or PDF file.
 
@@ -166,20 +166,20 @@ def click_word(word, save_screenshot_as="", index=-1):
     Searches for a specified word on screen and clicks the word's location. Takes a screenshot using pyautogui
     and recognizes text in it with pytesseract. Optionally, can save screenshot as a specified image file.
 
-    If able to find a single instance of the word, retrieves it's coordinates and clicks the location with mouse,
+    If able to find a single instance of the word, retrieves its coordinates and clicks the location with mouse,
     using pyautogui. If multiple instances of the word are found, a specific one can be selected to be clicked by
-    it's index. By default, does not click any found word, if multiple instances are found.
+    its index. By default, does not click any found word, if multiple instances are found.
 
     :param word: The specified word. Required. Upper and lowercase sensitive!
     :type word: str
     :param save_screenshot_as: File name for saved screenshot. Optional. File type, such as .jog or .png, MUST be
-                               included in the file name! Parameter can include absolute path or relative directory
+                               included in the file name! Argument can include absolute path or relative directory
                                path to current project folder, where screenshot is saved at, in addition to the
                                file name. By default, or if empty, screenshot is not saved.
     :type save_screenshot_as: str
     :param index: Index of a specific found word. Optional. First found instance of the word is at position 0 (zero).
-                  If less than 0, no instance will be chosen and none of the multiple found words will be clicked.
-                  By default, less than 0.
+                  By default, or if less than 0, no instance will be chosen and none of the multiple found words will
+                  be clicked.
     :type index: int
     """
     screenshot = pyautogui.screenshot()
