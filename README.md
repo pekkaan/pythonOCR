@@ -1,6 +1,6 @@
 # PythonOCR
 
-PythonOCR library for finding and locating words on screen, in image files or PDF files.
+PythonOCR module for finding and locating words on screen, in image files or PDF files.
 
 ## Prerequisites
 
@@ -8,7 +8,9 @@ PythonOCR utilizes the following modules:
 
 **pyautogui** for taking screenshots and mouse controls.
 
-**pdf2image** to convert PDF files to image files.
+**pdf2image** to convert PDF files to image files. pdf2image is a wrapper around poppler.
+
+    **poppler** to read, render and modify PDF files.
 
 **pytesseract** to recognize text in image files. pytesseract requires Tesseract OCR in order to function.
 
@@ -28,6 +30,22 @@ pip install pyautogui
 
 More information at: https://pypi.org/project/PyAutoGUI/
 
+### poppler
+
+Download the latest poppler release (.zip file) from: https://github.com/oschwartz10612/poppler-windows/releases/
+
+More information at: https://github.com/oschwartz10612/poppler-windows
+
+1. Unzip the poppler release.
+
+2. Add the poppler folder ('poppler-xx') to your local Python library's site packages.
+
+On Windows, local Python site packages may be located at:
+
+```C:\Users\<User name>\AppData\Local\Programs\Python\<Python 3 version>\Lib\site-packages```
+
+_NOTE:_ As Python and its libraries were added to PATH, there is no need to add poppler separately to PATH.
+
 ### pdf2image
 
 Install pdf2image using pip:
@@ -36,9 +54,7 @@ Install pdf2image using pip:
 pip install pdf2image
 ```
 
-More information at: https://pypi.org/project/pdf2image/
-
-_NOTE:_ poppler will be included with PythonOCR, in the /bin directory.
+More information at: https://pypi.org/project/pdf2image/ and https://github.com/Belval/pdf2image
 
 ### Tesseract OCR
 
@@ -60,35 +76,22 @@ More information at: https://pypi.org/project/pytesseract/
 
 ## Installing
 
-Download 'pythonocr' folder and add it to your project directory.
-
-'pythonocr' folder should contain the following files:
-
-```/bin```: Folder containing poppler files, which are used by pdf2image.
-
-```__init__.py```: To define 'pythonocr' folder as a package.
-
-```exceptions.py```: Defined exceptions specific to PythonOCR.
-
-```pythonocr.py```: PythonOCR functions.
+Download 'pythonocr.py' module and add it to your project directory.
 
 ## Usage
 
-Add 'pythonocr' folder to your project directory.
+Add 'pythonocr.py' module to your project directory.
 
-Import 'pythonocr' module from 'pythonocr' folder to your code:
-
-```
-from pythonocr import pythonocr
-```
-
-Import PythonOCR exceptions to your code:
+Import 'pythonocr.py' module to your code:
 
 ```
-from pythonocr.exceptions import (
-    InvalidFileTypeError,
-    InvalidImageTypeError,
-)
+import pythonocr
+```
+
+Alternatively, 'pythonocr.py' module can be located in a subdirectory under the project directory. Importing 'pythonocr.py' from a relative subdirectory (<folder>) to your code is done as follows:
+
+```
+from <folder> import pythonocr
 ```
 
 PythonOCR library functions can then be used as follows:
@@ -103,7 +106,11 @@ pythonocr.find_coordinates(<word>, <file path>)
 pythonocr.verify_word(<word>, <file path>)
 ```
 
-Detailed examples of how to use each of these functions are provided below.
+Detailed examples of how to use each of these functions are provided in **Functions** section.
+
+### Usage in QAutoRobot
+
+Work in progress...
 
 ## Functions
 
@@ -119,11 +126,11 @@ If multiple instances of the word are found, a specific one can be selected by i
 
 **Parameters:** ```click_word(word, save_screenshot_as, index)```
 
-```word```: The specified word in string format. Required. Upper and lowercase sensitive!
+```word```: Required. The specified word in string format. Upper and lowercase sensitive!
 
-```save_screenshot_as```: File name in string format for saving the screenshot. Optional. MUST include valid file type ending, such as '.jpg' or '.png'. In addition, may include absolute path or relative directory path to current project folder, where the screenshot is saved at. By default, or if empty, screenshot is not saved.
+```save_screenshot_as```: Optional. File name in string format for saving the screenshot. MUST include valid file type ending, such as '.jpg' or '.png'. In addition, may include absolute path or relative directory path to current project folder, where the screenshot is saved at. By default, or if empty, screenshot is not saved.
 
-```index```: Index of the specific found word, in integer format. Optional. First found instance of the word is at position 0 (zero). By default, or if less than 0, no instance will be chosen and none of the multiple found words will be clicked.
+```index```: Optional. Index of the specific found word, in integer format. First found instance of the word is at position 0 (zero). By default, or if less than 0, no instance will be chosen and none of the multiple found words will be clicked.
 
 **Examples:**
 
@@ -143,9 +150,9 @@ Function searches for all instances of a specific word in image or PDF file. Con
 
 **Parameters:** ```find_words(word, file_path, output_path)```
 
-```word```: The specified word in string format. Required. Upper and lowercase sensitive!
+```word```: Required. The specified word in string format. Upper and lowercase sensitive!
 
-```file_path```: Image or PDF file path in string format. Required. Can be absolute or relative to the current project directory.
+```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
 
 ```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. By default, current project directory.
 
@@ -175,9 +182,9 @@ Function searches for all instances of a specified word and their coordinates in
 
 **Parameters:** ```find_coordinates(word, file_path, output_path)```
 
-```word```: The specified word in string format. Required. Upper and lowercase sensitive!
+```word```: Required. The specified word in string format. Upper and lowercase sensitive!
 
-```file_path```: Image or PDF file path in string format. Required. Can be absolute or relative to the current project directory.
+```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
 
 ```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. By default, current project directory.
 
@@ -207,9 +214,9 @@ Function searches for any instances of a specified word in image file. Able to h
 
 **Parameters:** ```verify_word(word, image_path)```
 
-```word```: The specified word in string format. Required. Upper and lowercase sensitive!
+```word```: Required. The specified word in string format. Upper and lowercase sensitive!
 
-```image_path```: Image file path in string format. Required. Can be absolute or relative to the current project directory.
+```image_path```: Required. Image file path in string format. Can be absolute or relative to the current project directory.
 
 **Returns:**
 
