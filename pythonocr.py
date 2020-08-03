@@ -13,8 +13,6 @@ Main functions:
 
 """
 
-import inspect
-import os.path
 import warnings
 
 import pyautogui
@@ -29,19 +27,17 @@ from pdf2image.exceptions import (
     PDFSyntaxError
 )
 
-from exceptions import (
-    InvalidFileTypeError,
-    InvalidImageTypeError,
-)
-
 """
 FOR DEVELOPERS:
 
-PythonOCR main functions can be found at the end of this file, internal functions are located before them.
+PythonOCR internal functions are located at the beginning of this file (below), and main functions are located
+after them. PythonOCR exceptions are located at the end of this file.
+
+When applying changes to this file, remember to update the documentation accordingly! Update function descriptions
+in this file (file description and function descriptions), and update the README file in git (pythonOCR and
+QAutoLibrary).
 
 Internal functions:
-
-    _get_poppler_path(): Returns directory path of poppler files.
 
     _get_word_coordinate_from_data(): Retrieves the data of found instances of a word and their coordinates
                                       from image data.
@@ -55,27 +51,26 @@ Internal functions:
 
     _click_coordinates(): Moves mouse cursor on screen to the provided coordinates, and clicks the location.
 
+Exceptions:
+
+    PythonOCRError: Base error class for PythonOCR errors.
+
+    InvalidFileTypeError: Error raised when given file is not a valid image nor PDF file.
+
+    InvalidImageTypeError: Error raised when given file is not a valid image file.
+
 """
 
 
 # INTERNAL FUNCTIONS:
-def _get_poppler_path():
-    """
-    Internal function. Returns directory path of poppler files, should be: .../pythonocr/bin
-    """
-    this_file = inspect.getframeinfo(inspect.currentframe()).filename
-    this_path = os.path.dirname(os.path.abspath(this_file))
-    return os.path.join(this_path, "bin")
-
-
 def _get_word_coordinates_from_data(word, image_data, page_number=0):
     """
     Internal function. Retrieves the data of found instances of a specified word and their coordinates from given data.
 
-    :param word: The specified word. Required.
-    :param image_data: Given image data, such as data retrieved by pytesseract. Required.
+    :param word: Required. The specified word.
+    :param image_data: Required. Given image data, such as data retrieved by pytesseract.
                        Must be a dictionary of lists.
-    :param page_number: Page number to be included with the returned data. Optional. If 0 (zero) or less,
+    :param page_number: Optional. Page number to be included with the returned data. If 0 (zero) or less,
                         page number is not included in the returned data. By default, 0.
     :return: Found instances of the word and their coordinates in image.
              A list of tuples, each element consisting of: (found text, left coordinates (X), top coordinates (Y),
@@ -133,9 +128,7 @@ def _validate_file(file_path, output_path):
     if _is_valid_image(file_path):
         image_list.append(file_path)
     elif _is_valid_pdf(file_path):
-        image_list = pdf2image.convert_from_path(file_path, fmt="jpeg",
-                                                 output_folder=output_path,
-                                                 poppler_path=_get_poppler_path())
+        image_list = pdf2image.convert_from_path(file_path, fmt="jpeg", output_folder=output_path)
     else:
         raise InvalidFileTypeError("Could not recognize '{file}' as a .jpg, .jpeg, .png nor .pdf file!"
                                    .format(file=file_path))
@@ -147,10 +140,10 @@ def _click_coordinates(data_list, element_index=0):
     Internal function. Moves mouse cursor on screen to coordinates retrieved from data, and clicks the location.
     If data contains multiple elements and their coordinates, specific coordinates can be chosen by index.
 
-    :param data_list: Data as a list of tuples. Required. Elements must consist of: (found text, left coordinates (X),
+    :param data_list: Required. Data as a list of tuples. Elements must consist of: (found text, left coordinates (X),
                       top coordinates (Y), text width, text height)
     :type data_list: list
-    :param element_index: Index of the data element. Optional. By default, 0 (zero; first element).
+    :param element_index: Optional. Index of the data element. By default, 0 (zero; first element).
     :type element_index: int
     """
     # Element in 'data_list' consists of: (text, left coordinates (X), top coordinates (Y), text width, text height)
@@ -170,17 +163,28 @@ def click_word(word, save_screenshot_as="", index=-1):
     using pyautogui. If multiple instances of the word are found, a specific one can be selected to be clicked by
     its index. By default, does not click any found word, if multiple instances are found.
 
-    :param word: The specified word. Required. Upper and lowercase sensitive!
+    :param word: Required. The specified word. Upper and lowercase sensitive!
     :type word: str
-    :param save_screenshot_as: File name for saved screenshot. Optional. File type, such as .jog or .png, MUST be
+    :param save_screenshot_as: Optional. File name for saved screenshot. File type, such as .jog or .png, MUST be
                                included in the file name! Argument can include absolute path or relative directory
                                path to current project folder, where screenshot is saved at, in addition to the
                                file name. By default, or if empty, screenshot is not saved.
     :type save_screenshot_as: str
-    :param index: Index of a specific found word. Optional. First found instance of the word is at position 0 (zero).
+    :param index: Optional. Index of a specific found word. First found instance of the word is at position 0 (zero).
                   By default, or if less than 0, no instance will be chosen and none of the multiple found words will
                   be clicked.
     :type index: int
+
+    ----------
+
+    Examples:
+
+    click_word("Python") - Searches and clicks the word 'Python' on screen.
+
+    click_word("Python", "./screenshots/screenshot.png") - Searches and clicks the word, and saves the
+    screenshot as 'screenshot.png' to the folder 'screenshots' in the project directory.
+
+    click_word("Python", index=0) - Searches and clicks the first instance of the word 'Python' on screen.
     """
     screenshot = pyautogui.screenshot()
     if save_screenshot_as:
@@ -212,9 +216,9 @@ def find_words(word, file_path, output_path="./"):
     Searches for all instances of a specified word in image or PDF file.
     Converts a PDF file to image(s), and recognizes the text in image(s) with pytesseract.
 
-    :param word: The specified word. Required. Upper and lowercase sensitive!
+    :param word: Required. The specified word. Upper and lowercase sensitive!
     :type word: str
-    :param file_path: Image or PDF file path. Required. Can be absolute or relative to the current project directory.
+    :param file_path: Required. Image or PDF file path. Can be absolute or relative to the current project directory.
     :type file_path: str
     :param output_path: Output directory for image files converted from the PDF file. Not required if processing
                         image files. By default, current project directory.
@@ -222,6 +226,17 @@ def find_words(word, file_path, output_path="./"):
     :return: A list of found instances of the specified word.
              A list of tuples, each element consisting of: (found text, page number).
     :rtype: list
+
+    ----------
+
+    Examples:
+
+    find_words("Python", "image_file.png") - Returns the found instances of the word 'Python' from the file
+    'image_file.png'.
+
+    find_words("Python", "./project_files/pdf_file.pdf", "./output_folder") - Returns the found instances of the word
+    from file 'pdf_file.pdf' located in the folder 'project_files' in the project directory.  Converted images are
+    saved to the folder 'output_folder'.
     """
     image_list = _validate_file(file_path, output_path)
     results = []
@@ -245,17 +260,28 @@ def find_coordinates(word, file_path, output_path="./"):
     Searches for all instances of a specified word and their coordinates in image or PDF file.
     Converts a PDF file to image(s), and recognizes the text in image(s) with pytesseract.
 
-    :param word: The specified word. Required. Upper and lowercase sensitive!
+    :param word: Required. The specified word. Upper and lowercase sensitive!
     :type word: str
-    :param file_path: Image or PDF file path. Required. Can be absolute or relative to the current project directory.
+    :param file_path: Required. Image or PDF file path. Can be absolute or relative to the current project directory.
     :type file_path: str
-    :param output_path: Output directory for image files converted from the PDF file.
+    :param output_path: Optional. Output directory for image files converted from the PDF file.
                         By default, current project directory.
     :type output_path: str
     :return: Found instances of the word and their coordinates in image.
              A list of tuples, each element consisting of: (found text, left coordinates (X), top coordinates (Y),
              text width, text height, page number).
     :rtype: list
+
+    ----------
+
+    Examples:
+
+    find_coordinates("Python", "image_file.png") - Returns the found instances of the word 'Python' and their
+    coordinates from the file 'image_file.png'.
+
+    find_coordinates("Python", "./project_files/pdf_file.pdf", "./output_folder") - Returns the found instances
+    of the word and their coordinates from file 'pdf_file.pdf' located in the folder 'project_files' in the
+    project directory. Converted images are saved to the folder 'output_folder'.
     """
     image_list = _validate_file(file_path, output_path)
     results = []
@@ -273,12 +299,22 @@ def verify_word(word, image_path):
     """
     Searches for any instance of a specified word in image file. Recognizes the text in image with pytesseract.
 
-    :param word: The specified word. Required. Upper and lowercase sensitive!
+    :param word: Required. The specified word. Upper and lowercase sensitive!
     :type word: str
-    :param image_path: Image file path. Required. Can be absolute or relative to the current project directory.
+    :param image_path: Required. Image file path. Can be absolute or relative to the current project directory.
     :type image_path: str
     :return: Returns True if found at least one instance of the specified word in image, False if none.
     :rtype: bool
+
+    ----------
+
+    Examples:
+
+    verify_word("Python", "image_file.png") - Returns whether or not the word 'Python' was found from file
+    'image_file.png'.
+
+    verify_word("Python", "./project_files/image_file.png") - Returns whether or not the word was found from file
+    'image_file.png' in the folder 'project_files' in the project directory.
     """
     if not _is_valid_image(image_path):
         raise InvalidImageTypeError("Could not recognize '{file}' as a .jpg, .jpeg nor .png image file!"
@@ -289,3 +325,20 @@ def verify_word(word, image_path):
         return True
     else:
         return False
+
+
+# EXCEPTIONS:
+class PythonOCRError(Exception):
+    """Base error class for PythonOCR errors."""
+    def __init__(self, message):
+        super().__init__(message)
+
+
+class InvalidFileTypeError(PythonOCRError):
+    """Error raised when given file is not a valid image nor PDF file."""
+    pass
+
+
+class InvalidImageTypeError(InvalidFileTypeError):
+    """Error raised when given file is not a valid image file."""
+    pass
