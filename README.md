@@ -88,7 +88,7 @@ Import 'pythonocr.py' module to your code:
 import pythonocr
 ```
 
-Alternatively, 'pythonocr.py' module can be located in a subdirectory under the project directory. Importing 'pythonocr.py' from a relative subdirectory (<folder>) to your code is done as follows:
+Alternatively, 'pythonocr.py' module can be in a subdirectory under the project directory. Importing 'pythonocr.py' from a relative subdirectory (<folder>) to your code is done as follows:
 
 ```
 from <folder> import pythonocr
@@ -158,7 +158,7 @@ Function searches for all instances of a specific word in image or PDF file. Con
 
 **Returns:**
 
-A list of found instances of the word as a list of tuples, each element consisting of: (found text, page number).
+A list of found instances of the word as a list of dictionaries. Each dictionary consisting of: {"text": found text, "page": page number}.
 
 **Examples:**
 
@@ -190,7 +190,7 @@ Function searches for all instances of a specified word and their coordinates in
 
 **Returns:**
 
-A list of found instances of the word and their coordinates as a list of tuples, each element consisting of: (found text, left coordinates, top coordinates, text width, text height, page number).
+A list of found instances of the word and their coordinates as a list of dictionaries. Each dictionary consisting of: {"text": found text, "left": left coordinates, "top": top coordinates, "width": text width, "height": text height, "page": page number}.
 
 **Examples:**
 
