@@ -36,17 +36,15 @@ Download the latest poppler release (.zip file) from: https://github.com/oschwar
 
 More information at: https://github.com/oschwartz10612/poppler-windows
 
-1. Unzip the poppler release.
+1. Unzip the poppler release file.
 
-2. Add the poppler folder ('poppler-xx') to your local Python library's site packages.
+2. Add the poppler folder ('poppler-xx') to your Program Files, for example, to: ```C:\Program Files (x86)\Poppler\ ```
 
-On Windows, local Python site packages may be located at:
-
-```C:\Users\<User name>\AppData\Local\Programs\Python\<Python 3 version>\Lib\site-packages```
-
-_NOTE:_ As Python and its libraries were added to PATH, there is no need to add poppler separately to PATH.
+3. Include the 'poppler-xx\bin' folder as a SYSTEM PATH environment variable. (For example, add: ```C:\Program Files (x86)\Poppler\poppler-0.90.1\bin``` to PATH.)
 
 ### pdf2image
+
+_NOTE:_ Install poppler before installing pdf2image!
 
 Install pdf2image using pip:
 
@@ -65,6 +63,8 @@ Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
 More information at: https://github.com/tesseract-ocr/tessdoc
 
 ### pytesseract
+
+_NOTE:_ Install Tesseract OCR before installing pytesseract!
 
 Install pytesseract using pip:
 
