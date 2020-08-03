@@ -5,9 +5,10 @@ Main functions:
 
     click_word(): Searches for a word on screen and clicks its location.
 
-    find_words(): Searches for all instances of a word in image or PDF file.
+    find_words(): Searches for all instances of a word in image or PDF file, and returns the results.
 
-    find_coordinates(): Searches for all instances of a word and their coordinates in image or PDF file.
+    find_coordinates(): Searches for all instances of a word and their coordinates in image or PDF file, and returns
+    the results.
 
     verify_word(): Verifies, if image file contains any instance of a word.
 
@@ -63,18 +64,17 @@ Exceptions:
 
 
 # INTERNAL FUNCTIONS:
-def _get_word_coordinates_from_data(word, image_data, page_number=0):
+def _get_word_coordinates_from_data(word, image_data, page_number=1):
     """
     Internal function. Retrieves the data of found instances of a specified word and their coordinates from given data.
 
     :param word: Required. The specified word.
     :param image_data: Required. Given image data, such as data retrieved by pytesseract.
                        Must be a dictionary of lists.
-    :param page_number: Optional. Page number to be included with the returned data. If 0 (zero) or less,
-                        page number is not included in the returned data. By default, 0.
+    :param page_number: Optional. Page number to be included with the returned data. By default, 1.
     :return: Found instances of the word and their coordinates in image.
-             A list of tuples, each element consisting of: (found text, left coordinates (X), top coordinates (Y),
-             text width, text height, page number (Optional)).
+             A list of dictionaries, each dictionary consisting of: {"text": found text, "left": left coordinates (X),
+             "top": top coordinates (Y), "width": text width, "height": text height, "page": page number}.
     """
     results = []
     # 'image_data' is a dictionary of lists.
@@ -85,15 +85,16 @@ def _get_word_coordinates_from_data(word, image_data, page_number=0):
         text = image_data["text"][index]
 
         if word in text:
-            x_coord = image_data["left"][index]
-            y_coord = image_data["top"][index]
-            width = image_data["width"][index]
-            height = image_data["height"][index]
+            new_item = {
+                "text": text,
+                "left": image_data["left"][index],
+                "top": image_data["top"][index],
+                "width": image_data["width"][index],
+                "height": image_data["height"][index],
+                "page": page_number
+            }
+            results.append(new_item)
 
-            if page_number <= 0:
-                results.append((text, x_coord, y_coord, width, height))
-            elif page_number > 0:
-                results.append((text, x_coord, y_coord, width, height, page_number))
     return results
 
 
@@ -140,15 +141,16 @@ def _click_coordinates(data_list, element_index=0):
     Internal function. Moves mouse cursor on screen to coordinates retrieved from data, and clicks the location.
     If data contains multiple elements and their coordinates, specific coordinates can be chosen by index.
 
-    :param data_list: Required. Data as a list of tuples. Elements must consist of: (found text, left coordinates (X),
-                      top coordinates (Y), text width, text height)
+    :param data_list: Required. Data as a list of dictionaries. Dictionaries must consist of: {"text": found text,
+                      "left": left coordinates (X), "top": top coordinates (Y), "width": text width, "height": text
+                      height, "page": page number (Optional)}
     :type data_list: list
     :param element_index: Optional. Index of the data element. By default, 0 (zero; first element).
     :type element_index: int
     """
     # Element in 'data_list' consists of: (text, left coordinates (X), top coordinates (Y), text width, text height)
-    x_coordinate = data_list[element_index][1] + data_list[element_index][3] / 2
-    y_coordinate = data_list[element_index][2] + data_list[element_index][4] / 2
+    x_coordinate = data_list[element_index]["left"] + data_list[element_index]["width"] / 2
+    y_coordinate = data_list[element_index]["top"] + data_list[element_index]["height"] / 2
     pyautogui.moveTo(x_coordinate, y_coordinate, duration=0)
     pyautogui.click()
 
@@ -223,8 +225,8 @@ def find_words(word, file_path, output_path="./"):
     :param output_path: Output directory for image files converted from the PDF file. Not required if processing
                         image files. By default, current project directory.
     :type output_path: str
-    :return: A list of found instances of the specified word.
-             A list of tuples, each element consisting of: (found text, page number).
+    :return: A list of found instances of the specified word as a list of dictionaries. Each dictionary consistsing of:
+             {"text": found text, "page": page number}.
     :rtype: list
 
     ----------
@@ -250,7 +252,12 @@ def find_words(word, file_path, output_path="./"):
         text_array = text_in_image.splitlines()
         for line in text_array:
             if word in line:
-                results.append((line, page_number))
+                new_item = {
+                    "text": line,
+                    "page": page_number
+                }
+                results.append(new_item)
+
         page_number += 1
     return results
 
@@ -267,9 +274,9 @@ def find_coordinates(word, file_path, output_path="./"):
     :param output_path: Optional. Output directory for image files converted from the PDF file.
                         By default, current project directory.
     :type output_path: str
-    :return: Found instances of the word and their coordinates in image.
-             A list of tuples, each element consisting of: (found text, left coordinates (X), top coordinates (Y),
-             text width, text height, page number).
+    :return: Found instances of the word and their coordinates in image as a list of dictionaries. Each dictionary
+             consisting of: {"text": found text, "left": left coordinates (X), "top": top coordinates (Y),
+             "width": text width, "height": text height, "page": page number}.
     :rtype: list
 
     ----------
