@@ -10,7 +10,7 @@ PythonOCR utilizes the following modules:
 
 **pdf2image** to convert PDF files to image files. pdf2image is a wrapper around poppler.
 
-  **poppler** to read, render and modify PDF files.
+**poppler** to read, render and modify PDF files.
 
 **pytesseract** to recognize text in image files. pytesseract requires Tesseract OCR in order to function.
 
