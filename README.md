@@ -12,7 +12,7 @@ PythonOCR utilizes the following modules:
 
 **pdf2image** to convert PDF files to image files. pdf2image is a wrapper around poppler.
 
-**pytesseract** to recognize text in image files. pytesseract requires Tesseract OCR in order to function.
+**pytesseract** to recognize text in image files. pytesseract requires **Google Tesseract OCR** in order to function.
 
 ### Python
 
@@ -44,7 +44,7 @@ More information at: https://github.com/oschwartz10612/poppler-windows
 
 ### pdf2image
 
-_NOTE:_ Install poppler before installing pdf2image!
+**NOTE:** Install poppler before installing pdf2image!
 
 Install pdf2image using pip:
 
@@ -56,7 +56,7 @@ More information at: https://pypi.org/project/pdf2image/ and https://github.com/
 
 ### Tesseract OCR
 
-Install Tesseract OCR and include Finnish. **Add Tesseract-OCR to PATH.**
+Install Google Tesseract OCR and include Finnish. **Add Tesseract-OCR to PATH.**
 
 Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
 
@@ -64,7 +64,7 @@ More information at: https://github.com/tesseract-ocr/tessdoc
 
 ### pytesseract
 
-_NOTE:_ Install Tesseract OCR before installing pytesseract!
+**NOTE:** Install Tesseract OCR before installing pytesseract!
 
 Install pytesseract using pip:
 
@@ -110,7 +110,7 @@ Work in progress...
 
 Main functions of PythonOCR library are: click_word(), find_word(), find_coordinates(), verify_word().
 
-_NOTE:_ Provide file paths and directory paths in string format to function parameters. Include file type endings, such as '.jpg' or '.png', when providing file paths.
+**NOTE:** Provide file paths and directory paths in string format to function parameters. Include file type endings, such as '.jpg' or '.png', when providing file paths.
 
 ### Function: click_word()
 
