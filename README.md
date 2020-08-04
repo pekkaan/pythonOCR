@@ -8,15 +8,15 @@ PythonOCR utilizes the following modules:
 
 **pyautogui** for taking screenshots and mouse controls.
 
-**pdf2image** to convert PDF files to image files. pdf2image is a wrapper around poppler.
-
 **poppler** to read, render and modify PDF files.
+
+**pdf2image** to convert PDF files to image files. pdf2image is a wrapper around poppler.
 
 **pytesseract** to recognize text in image files. pytesseract requires Tesseract OCR in order to function.
 
 ### Python
 
-Install Python (3.5+) and include pip with the installation. **Add Python to PATH.**
+Install Python (3.7+) and include pip with the installation. **Add Python to PATH.**
 
 Download Python: https://www.python.org/downloads/
 
@@ -38,7 +38,7 @@ More information at: https://github.com/oschwartz10612/poppler-windows
 
 1. Unzip the poppler release file.
 
-2. Add the poppler folder ('poppler-xx') to your Program Files, for example, to: ```C:\Program Files (x86)\Poppler\ ```
+2. Add the poppler folder ('poppler-xx') to your Program Files. (For example, to: ```C:\Program Files (x86)\Poppler\ ```.)
 
 3. Include the 'poppler-xx\bin' folder as a SYSTEM PATH environment variable. (For example, add: ```C:\Program Files (x86)\Poppler\poppler-0.90.1\bin``` to PATH.)
 
@@ -76,34 +76,28 @@ More information at: https://pypi.org/project/pytesseract/
 
 ## Installing
 
-Download 'pythonocr.py' module and add it to your project directory.
+Install QAutoLibrary containing PythonOCR.py module.
+
+QAutoLibrary download and installation instructions: https://github.com/QAutofamily/QAutoLibrary
 
 ## Usage
 
-Add 'pythonocr.py' module to your project directory.
-
-Import 'pythonocr.py' module to your code:
+Import PythonOCR module from QAutoLibrary to your code:
 
 ```
-import pythonocr
+from QAutoLibrary import PythonOCR
 ```
 
-Alternatively, 'pythonocr.py' module can be in a subdirectory under the project directory. Importing 'pythonocr.py' from a relative subdirectory (<folder>) to your code is done as follows:
+PythonOCR functions can then be used as follows:
 
 ```
-from <folder> import pythonocr
-```
+PythonOCR.click_word(<word>)
 
-PythonOCR library functions can then be used as follows:
+PythonOCR.find_words(<word>, <file path>)
 
-```
-pythonocr.click_word(<word>)
+PythonOCR.find_coordinates(<word>, <file path>)
 
-pythonocr.find_words(<word>, <file path>)
-
-pythonocr.find_coordinates(<word>, <file path>)
-
-pythonocr.verify_word(<word>, <file path>)
+PythonOCR.verify_word(<word>, <file path>)
 ```
 
 Detailed examples of how to use each of these functions are provided in **Functions** section.
@@ -134,15 +128,15 @@ If multiple instances of the word are found, a specific one can be selected by i
 
 **Examples:**
 
-```pythonocr.click_word("Python")``` Searches for word 'Python' on screen and if a single instance is found, clicks its location. Screenshot is not saved.
+```PythonOCR.click_word("Python")``` Searches for word 'Python' on screen and if a single instance is found, clicks its location. Screenshot is not saved.
 
-```pythonocr.click_word("Python", "screenshot.png")``` As above, but the screenshot is saved to the current project directory as 'screenshot.png'.
+```PythonOCR.click_word("Python", "screenshot.png")``` As above, but the screenshot is saved to the current project directory as 'screenshot.png'.
 
-```pythonocr.click_word("Python", "./screenshots/screenshot.png")``` As above, but the screenshot is saved to 'screenshots' folder in the current project directory.
+```PythonOCR.click_word("Python", "./screenshots/screenshot.png")``` As above, but the screenshot is saved to 'screenshots' folder in the current project directory.
 
-```pythonocr.click_word("Python", "C:/project_folder/screenshots/screenshot.png")``` As above, but the screenshot is saved to the specific directory.
+```PythonOCR.click_word("Python", "C:/project_folder/screenshots/screenshot.png")``` As above, but the screenshot is saved to the specific directory.
 
-```pythonocr.click_word("Python", index=0)``` Searches for the word on screen and if finds multiple instances of the word, clicks the first found instance (at index position 0 (zero)). Screenshot is not saved.
+```PythonOCR.click_word("Python", index=0)``` Searches for the word on screen and if finds multiple instances of the word, clicks the first found instance (at index position 0 (zero)). Screenshot is not saved.
 
 ### Function: find_words()
 
@@ -162,19 +156,19 @@ A list of found instances of the word as a list of dictionaries. Each dictionary
 
 **Examples:**
 
-```pythonocr.find_words("Python", "image_file.png")``` Returns all found instances of the word 'Python' in 'image_file.png'.
+```PythonOCR.find_words("Python", "image_file.png")``` Returns all found instances of the word 'Python' in 'image_file.png'.
 
-```results_list = pythonocr.find_words("Python", "image_file.png")``` As above, but the results are assigned to 'results_list' variable.
+```results_list = PythonOCR.find_words("Python", "image_file.png")``` As above, but the results are assigned to 'results_list' variable.
 
-```print(pythonocr.find_words("Python", "image_file.png"))``` As above, but the results are printed to console.
+```print(PythonOCR.find_words("Python", "image_file.png"))``` As above, but the results are printed to console.
 
-```pythonocr.find_words("Python", "./project_files/image_file.png")``` Returns all found instances of the word in 'image_file.png' located in 'project_files' folder in the current project directory.
+```PythonOCR.find_words("Python", "./project_files/image_file.png")``` Returns all found instances of the word in 'image_file.png' located in 'project_files' folder in the current project directory.
 
-```pythonocr.find_words("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' in 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
+```PythonOCR.find_words("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' in 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
 
-```pythonocr.find_words("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to 'output' folder in the current project directory.
+```PythonOCR.find_words("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to 'output' folder in the current project directory.
 
-```pythonocr.find_words("Python", "C:/projet_folder/pdf_file.pdf", "C:/project_folder/output")``` As above, but file path and output folder for images are provided as absolute file paths.
+```PythonOCR.find_words("Python", "C:/projet_folder/pdf_file.pdf", "C:/project_folder/output")``` As above, but file path and output folder for images are provided as absolute file paths.
 
 ### Function: find_coordinates()
 
@@ -194,19 +188,19 @@ A list of found instances of the word and their coordinates as a list of diction
 
 **Examples:**
 
-```pythonocr.find_coordinates("Python", "image_file.png")``` Returns all instances of the word 'Python' and their coordinates in 'image_file.png'.
+```PythonOCR.find_coordinates("Python", "image_file.png")``` Returns all instances of the word 'Python' and their coordinates in 'image_file.png'.
 
-```results_list = pythonocr.find_coordinates("Python", "image_file.png")``` As above, but the results are assigned to 'results_list' variable.
+```results_list = PythonOCR.find_coordinates("Python", "image_file.png")``` As above, but the results are assigned to 'results_list' variable.
 
-```print(pythonocr.find_coordinates("Python", "image_file.png"))``` As above, but the results are printed to console.
+```print(PythonOCR.find_coordinates("Python", "image_file.png"))``` As above, but the results are printed to console.
 
-```pythonocr.find_coordinates("Python", "./project_files/image_file.png")``` Returns all found instances of the word and their coordinates in 'image_file.png' located in 'project_files' folder in the current project directory.
+```PythonOCR.find_coordinates("Python", "./project_files/image_file.png")``` Returns all found instances of the word and their coordinates in 'image_file.png' located in 'project_files' folder in the current project directory.
 
-```pythonocr.find_coordinates("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' and their coordinates in 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
+```PythonOCR.find_coordinates("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' and their coordinates in 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
 
-```pythonocr.find_coordinates("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to 'output' folder in the current project directory.
+```PythonOCR.find_coordinates("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to 'output' folder in the current project directory.
 
-```pythonocr.find_coordinates("Python", "C:/projet_folder/pdf_file.pdf", "C:/project_folder/output")``` As above, but file path and output folder for images are provided as absolute file paths.
+```PythonOCR.find_coordinates("Python", "C:/projet_folder/pdf_file.pdf", "C:/project_folder/output")``` As above, but file path and output folder for images are provided as absolute file paths.
 
 ### Function: verify_word()
 
@@ -224,12 +218,12 @@ Bool: True if found at least one instance of the specified word, False if none.
 
 **Examples:**
 
-```pythonocr.verify_word("Python", "image_file.png")``` Returns True or False if finds any instances of the word 'Python' in 'image_file.png'.
+```PythonOCR.verify_word("Python", "image_file.png")``` Returns True or False if finds any instances of the word 'Python' in 'image_file.png'.
 
-```found_word = pythonocr.verify_word("Python", "image_file.png")``` As above, but the result is assigned to 'found_word' variable.
+```found_word = PythonOCR.verify_word("Python", "image_file.png")``` As above, but the result is assigned to 'found_word' variable.
 
-```print(pythonocr.verify_word("Python", "image_file.png"))``` As above, but the result is printed to console.
+```print(PythonOCR.verify_word("Python", "image_file.png"))``` As above, but the result is printed to console.
 
-```pythonocr.verify_word("Python", "./project_files/image_file.png")``` Returns the result regarding the 'image_file.png' located in 'project_files' folder in the current project directory.
+```PythonOCR.verify_word("Python", "./project_files/image_file.png")``` Returns the result regarding the 'image_file.png' located in 'project_files' folder in the current project directory.
 
-```pythonocr.verify_word("Python", "C:/project_folder/project_files/image_file.png")``` As above, but the file path is provided as an absolute path.
+```PythonOCR.verify_word("Python", "C:/project_folder/project_files/image_file.png")``` As above, but the file path is provided as an absolute path.
