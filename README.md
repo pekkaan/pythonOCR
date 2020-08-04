@@ -1,6 +1,6 @@
 # PythonOCR
 
-PythonOCR module for finding and locating words on screen, in image files or PDF files.
+PythonOCR contains functions for finding and locating words on screen, in image files or PDF files using OCR (Optical Character Recognition).
 
 ## Prerequisites
 
@@ -201,7 +201,7 @@ A list of found instances of the word as a list of dictionaries. Each dictionary
 
 ```@{results_list} =  |  Find Words  |  Python  |  ./images/screenshot.png``` Found instances of the word 'Python' in file are assigned to list 'results_list'. The file 'screenshot.png' is located in folder 'images' in the current robot directory.
 
-```@{results_list} =  |  Find Words  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``` As above, but the images converted from file 'pdf_file.pdf' are saved to the folder 'images' in the current robot directory.
+```@{results_list} =  |  Find Words  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``` As above, but the images converted from file 'pdf_file.pdf' are saved to folder 'images' in the current robot directory.
 
 Returned data can be accessed as follows: ```${list[index]["key"]}```
 
@@ -241,7 +241,7 @@ A list of found instances of the word and their coordinates as a list of diction
 
 ```@{results_list} =  |  Find Coordinates  |  Python  |  ./images/screenshot.png``` Found instances of the word 'Python' and their coordinates in file are assigned to list 'results_list'. The file 'screenshot.png' is located in folder 'images' in the current robot directory.
 
-```@{results_list} =  |  Find Coordinates  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``` As above, but the images converted from file 'pdf_file.pdf' are saved to the folder 'images' in the current robot directory.
+```@{results_list} =  |  Find Coordinates  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``` As above, but the images converted from file 'pdf_file.pdf' are saved to folder 'images' in the current robot directory.
 
 Returned data can be accessed as follows: ```${list[index]["key"]}```
 
