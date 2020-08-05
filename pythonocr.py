@@ -56,7 +56,8 @@ def _get_word_coordinates_from_data(word, image_data, page_number=1):
     :param word: Required. The specified word.
     :param image_data: Required. Given image data, such as data retrieved by pytesseract.
                        Must be a dictionary of lists.
-    :param page_number: Optional. Page number to be included with the returned data. By default, 1.
+    :param page_number: Optional. Page number to be included with the returned data.
+                        By default, 1.
 
     :return: Found instances of the word and their coordinates in image.
              A list of dictionaries, each dictionary consisting of: {"text": found text, "left": left coordinates (X),
@@ -111,7 +112,8 @@ def _validate_file(file_path, output_path):
 
     :param file_path: Required. Image or PDF file path.
     :param output_path: Output directory for image files converted from the PDF file. Not required if processing
-                        image files. By default, current project directory.
+                        image files.
+                        By default, current project directory.
 
     :return: A list of image files.
     """
@@ -135,7 +137,8 @@ def _click_coordinates(data_list, element_index=0):
                       "left": left coordinates (X), "top": top coordinates (Y), "width": text width, "height": text
                       height, "page": page number (Optional)}
     :type data_list: list
-    :param element_index: Optional. Index of the data element. By default, 0 (zero; first element).
+    :param element_index: Optional. Index of the data element.
+                          By default, 0 (zero; first element).
     :type element_index: int
     """
     # Element in 'data_list' consists of: (text, left coordinates (X), top coordinates (Y), text width, text height)
@@ -153,14 +156,16 @@ def click_word(word, save_screenshot_as="", index=-1):
 
     If able to find a single instance of the word, retrieves its coordinates and clicks the location with mouse,
     using pyautogui. If multiple instances of the word are found, a specific one can be selected to be clicked by
-    its index. By default, does not click any found word, if multiple instances are found.
+    its index.
+    By default, does not click any found word, if multiple instances are found.
 
     :param word: Required. The specified word. Upper and lowercase sensitive!
     :type word: str
-    :param save_screenshot_as: Optional. File name for saved screenshot. File type, such as .jog or .png, MUST be
-                               included in the file name! Argument can include absolute path or relative directory
-                               path to current project folder, where screenshot is saved at, in addition to the
-                               file name. By default, or if empty, screenshot is not saved.
+    :param save_screenshot_as: Optional. File name for saved screenshot.
+                               MUST include valid file type ending, such as '.jpg' or '.png'. Additionally, may include
+                               absolute path or relative directory path to current project folder, where the screenshot
+                               is saved at. Provided directory path MUST pre-exist!
+                               By default, or if empty, screenshot is not saved.
     :type save_screenshot_as: str
     :param index: Optional. Index of a specific found word. First found instance of the word is at position 0 (zero).
                   By default, or if less than 0, no instance will be chosen and none of the multiple found words will
@@ -222,7 +227,8 @@ def find_words(word, file_path, output_path="./"):
     :param file_path: Required. Image or PDF file path. Can be absolute or relative to the current project directory.
     :type file_path: str
     :param output_path: Output directory for image files converted from the PDF file. Not required if processing
-                        image files. By default, current project directory.
+                        image files. Provided directory path MUST pre-exist!
+                        By default, current project directory.
     :type output_path: str
 
     :return: A list of found instances of the specified word as a list of dictionaries. Each dictionary consisting of:
@@ -277,7 +283,8 @@ def find_coordinates(word, file_path, output_path="./"):
     :type word: str
     :param file_path: Required. Image or PDF file path. Can be absolute or relative to the current project directory.
     :type file_path: str
-    :param output_path: Optional. Output directory for image files converted from the PDF file.
+    :param output_path: Optional. Output directory for image files converted from the PDF file. Provided directory
+                        path MUST pre-exist!
                         By default, current project directory.
     :type output_path: str
 

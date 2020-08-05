@@ -135,15 +135,21 @@ Main functions of PythonOCR library are: click_word(), find_word(), find_coordin
 
 Function takes a screenshot of the screen and searches for a specified word in it. If a single instance of the word is found, moves cursor to the coordinates of the word and clicks the location. Optionally, screenshot can be saved as a file.
 
-If multiple instances of the word are found, a specific one can be selected by index to be clicked. By default, does not click any found word, if multiple instances are found.
+If multiple instances of the word are found, a specific one can be selected by index to be clicked.
+
+By default, does not click any found word, if multiple instances are found.
 
 **Parameters:** ```click_word(word, save_screenshot_as, index)```
 
 ```word```: Required. The specified word in string format. Upper and lowercase sensitive!
 
-```save_screenshot_as```: Optional. File name in string format for saving the screenshot. MUST include valid file type ending, such as '.jpg' or '.png'. In addition, may include absolute path or relative directory path to current project folder, where the screenshot is saved at. By default, or if empty, screenshot is not saved.
+```save_screenshot_as```: Optional. File name in string format for saving the screenshot. MUST include valid file type ending, such as '.jpg' or '.png'. Additionally, may include absolute path or relative directory path to current project folder, where the screenshot is saved at. Provided directory path MUST pre-exist!
 
-```index```: Optional. Index of the specific found word, in integer format. First found instance of the word is at position 0 (zero). By default, or if less than 0, no instance will be chosen and none of the multiple found words will be clicked.
+By default, or if empty, screenshot is not saved.
+
+```index```: Optional. Index of the specific found word, in integer format. First found instance of the word is at position 0 (zero).
+
+By default, or if less than 0, no instance will be chosen and none of the multiple found words will be clicked.
 
 **Examples:**
 
@@ -175,7 +181,9 @@ Function searches for all instances of a specific word in image or PDF file. Con
 
 ```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
 
-```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. By default, current project directory.
+```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. Provided directory path MUST pre-exist!
+
+By default, current project directory.
 
 **Returns:**
 
@@ -215,7 +223,9 @@ Function searches for all instances of a specified word and their coordinates in
 
 ```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
 
-```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. By default, current project directory.
+```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. Provided directory path MUST pre-exist!
+
+By default, current project directory.
 
 **Returns:**
 
