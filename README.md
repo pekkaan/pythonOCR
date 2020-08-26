@@ -46,7 +46,7 @@ More information at: https://github.com/oschwartz10612/poppler-windows
 
 ### pdf2image
 
-_NOTE:_ Install poppler before installing pdf2image!
+**NOTE:** Install poppler before installing pdf2image!
 
 Install pdf2image using pip:
 
@@ -66,7 +66,7 @@ More information at: https://github.com/tesseract-ocr/tessdoc
 
 ### pytesseract
 
-_NOTE:_ Install Tesseract OCR before installing pytesseract!
+**NOTE:** Install Tesseract OCR before installing pytesseract!
 
 Install pytesseract using pip:
 
@@ -112,7 +112,7 @@ Work in progress...
 
 Main functions of PythonOCR library are: click_word(), find_word(), find_coordinates(), verify_word().
 
-_NOTE:_ Provide file paths and directory paths in string format to function parameters. Include file type endings, such as '.jpg' or '.png', when providing file paths.
+**NOTE:** Provide file paths and directory paths in string format to function parameters. Include file type endings, such as '.jpg' or '.png', when providing file paths.
 
 ### Function: click_word()
 
