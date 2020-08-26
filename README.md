@@ -2,6 +2,8 @@
 
 PythonOCR module for finding and locating words on screen, in image files or PDF files.
 
+**NOTE:** PythonOCR is unreliable at best when finding words in files, and should only be used as an assistance to process files. Usage of other confirmation methods (such as manual labor) is adviced, when processing important files!
+
 ## Prerequisites
 
 PythonOCR utilizes the following modules:
