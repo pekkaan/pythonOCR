@@ -26,7 +26,7 @@ from pytesseract import Output
 #  PythonOCR contains functions for finding and locating words on screen, in image files or PDF files using OCR (Optical
 #  Character Recognition).
 #
-# PythonOCR documentation is contained in this file, README.md and in QAutoLibrary.
+#  PythonOCR documentation is contained in this file, README.md and in QAutoLibrary.
 #
 #  CONTENTS
 #  Internal functions:
@@ -56,7 +56,8 @@ def _get_word_coordinates_from_data(word, image_data, page_number=1):
     :param word: Required. The specified word.
     :param image_data: Required. Given image data, such as data retrieved by pytesseract.
                        Must be a dictionary of lists.
-    :param page_number: Optional. Page number to be included with the returned data. By default, 1.
+    :param page_number: Optional. Page number to be included with the returned data.
+                        By default, 1.
 
     :return: Found instances of the word and their coordinates in image.
              A list of dictionaries, each dictionary consisting of: {"text": found text, "left": left coordinates (X),
@@ -111,7 +112,8 @@ def _validate_file(file_path, output_path):
 
     :param file_path: Required. Image or PDF file path.
     :param output_path: Output directory for image files converted from the PDF file. Not required if processing
-                        image files. By default, current project directory.
+                        image files.
+                        By default, current project directory.
 
     :return: A list of image files.
     """
@@ -135,7 +137,8 @@ def _click_coordinates(data_list, element_index=0):
                       "left": left coordinates (X), "top": top coordinates (Y), "width": text width, "height": text
                       height, "page": page number (Optional)}
     :type data_list: list
-    :param element_index: Optional. Index of the data element. By default, 0 (zero; first element).
+    :param element_index: Optional. Index of the data element.
+                          By default, 0 (zero; first element).
     :type element_index: int
     """
     # Element in 'data_list' consists of: (text, left coordinates (X), top coordinates (Y), text width, text height)
@@ -153,14 +156,16 @@ def click_word(word, save_screenshot_as="", index=-1):
 
     If able to find a single instance of the word, retrieves its coordinates and clicks the location with mouse,
     using pyautogui. If multiple instances of the word are found, a specific one can be selected to be clicked by
-    its index. By default, does not click any found word, if multiple instances are found.
+    its index.
+    By default, does not click any found word, if multiple instances are found.
 
     :param word: Required. The specified word. Upper and lowercase sensitive!
     :type word: str
-    :param save_screenshot_as: Optional. File name for saved screenshot. File type, such as .jog or .png, MUST be
-                               included in the file name! Argument can include absolute path or relative directory
-                               path to current project folder, where screenshot is saved at, in addition to the
-                               file name. By default, or if empty, screenshot is not saved.
+    :param save_screenshot_as: Optional. File name for saved screenshot.
+                               MUST include valid file type ending, such as '.jpg' or '.png'. Additionally, may include
+                               absolute path or relative directory path to current project folder, where the screenshot
+                               is saved at. Provided directory path MUST pre-exist!
+                               By default, or if empty, screenshot is not saved.
     :type save_screenshot_as: str
     :param index: Optional. Index of a specific found word. First found instance of the word is at position 0 (zero).
                   By default, or if less than 0, no instance will be chosen and none of the multiple found words will
@@ -169,13 +174,22 @@ def click_word(word, save_screenshot_as="", index=-1):
 
     -------------
     :Example:
-        | *Search and click the word ('Python') on screen.*
+        | *Searches and clicks the word ('Python') on screen.*
         | ``click_word("Python")``
-        | *Search and click the word on screen. Save screenshot as a file ('screenshot.png') to folder ('screenshots')
-          in the project directory.*
+        | *Searches and clicks the word on screen. Saves screenshot as a file ('screenshot.png') to folder
+          ('screenshots') in the current project directory.*
         | ``click_word("Python", "./screenshots/screenshot.png")``
         | *Searches and clicks the instance (0; zero) of the word on screen.*
         | ``click_word("Python", index=0)``
+        | *In QAutoRobot:*
+        | ``Click Word  |  ${word}  |  ${screenshot_file}  |  ${index}``
+        | *Searches and clicks the word ('Python') on screen.*
+        | ``Click Word  |  Python``
+        | *Searches and clicks the word on screen. Saves screenshot as a file ('screenshot.png') to folder ('images')
+          in the current robot directory.*
+        | ``Click Word  |  Python  |  ./images/screenshot.png``
+        | *Searches and clicks the instance (0; zero) of the word on screen.*
+        | ``Click Word  |  Python  |  index=0``
     """
     screenshot = pyautogui.screenshot()
     if save_screenshot_as:
@@ -213,7 +227,8 @@ def find_words(word, file_path, output_path="./"):
     :param file_path: Required. Image or PDF file path. Can be absolute or relative to the current project directory.
     :type file_path: str
     :param output_path: Output directory for image files converted from the PDF file. Not required if processing
-                        image files. By default, current project directory.
+                        image files. Provided directory path MUST pre-exist!
+                        By default, current project directory.
     :type output_path: str
 
     :return: A list of found instances of the specified word as a list of dictionaries. Each dictionary consisting of:
@@ -227,6 +242,14 @@ def find_words(word, file_path, output_path="./"):
         | *Returns the found instances of the word from file, located in folder ('project_files') in the project
           directory. Converted images are saved to folder ('output_folder') in the project directory.*
         | ``find_words("Python", "./project_files/pdf_file.pdf", "./output_folder")``
+        | *In QAutoRobot:*
+        | ``Find Words  |  ${word}  |  ${file_path}  |  ${output_path}``
+        | *Found instances of the word ('Python') in file are assigned to list ('result_list'). The file
+          ('screenshot.png') is located in folder ('images') in the current robot directory.*
+        | ``@{results_list} =  |  Find Words  |  Python  |  ./images/screenshot.png``
+        | *Found instances of the word in file are assigned to the list variable. The image files converted from
+          file ('pdf_file.pdf') are saved to folder ('images') in the current robot directory.*
+        | ``@{results_list} =  |  Find Words  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``
     """
     image_list = _validate_file(file_path, output_path)
     results = []
@@ -260,7 +283,8 @@ def find_coordinates(word, file_path, output_path="./"):
     :type word: str
     :param file_path: Required. Image or PDF file path. Can be absolute or relative to the current project directory.
     :type file_path: str
-    :param output_path: Optional. Output directory for image files converted from the PDF file.
+    :param output_path: Optional. Output directory for image files converted from the PDF file. Provided directory
+                        path MUST pre-exist!
                         By default, current project directory.
     :type output_path: str
 
@@ -277,6 +301,14 @@ def find_coordinates(word, file_path, output_path="./"):
           ('project_files') in the project directory. Converted images are saved to folder ('output_folder') in the
           project directory.*
         | ``find_coordinates("Python", "./project_files/pdf_file.pdf", "./output_folder")``
+        | *In QAutoRobot:*
+        | ``Find Coordinates  |  ${word}  |  ${file_path}  |  ${output_path}``
+        | *Found instances of the word ('Python') and their coordinates in file are assigned to list ('result_list').
+          The file ('screenshot.png') is located in folder ('images') in the current robot directory.*
+        | ``@{results_list} =  |  Find Coordinates  |  Python  |  ./images/screenshot.png``
+        | *Found instances of the word and their coordinates in file are assigned to the list variable. The image
+          files converted from file ('pdf_file.pdf') are saved to folder ('images') in the current robot directory.*
+        | ``@{results_list} =  |  Find Coordinates  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``
     """
     image_list = _validate_file(file_path, output_path)
     results = []
@@ -310,6 +342,11 @@ def verify_word(word, image_path):
         | *Returns True or False if the word was found from file located in folder ('project_files') in the
           project directory.*
         | ``verify_word("Python", "./project_files/image_file.png")``
+        | *In QAutoRobot:*
+        | ``Verify Word  |  ${word}  |  ${file_path}``
+        | Assigns True or False to variable ('found_word') if the word was found from file ('screenshot.png') located
+          in folder ('images') in the current robot directory.
+        | ``${found_word} =  |  Verify Word  |  Python  |  ./images/screenshot.png``
     """
     if not _is_valid_image(image_path):
         raise InvalidImageTypeError("Could not recognize '{file}' as a .jpg, .jpeg nor .png image file!"
