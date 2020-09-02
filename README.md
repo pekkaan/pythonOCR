@@ -154,6 +154,8 @@ Function takes a screenshot of the screen and searches for a specified word in i
 
 If multiple instances of the word are found, a specific one can be selected by index to be clicked. By default, does not click any found word, if multiple instances are found.
 
+**NOTE:** When using this function as a keyword in Robot, providing a value for parameter ```index``` is recommended!
+
 **Parameters:** ```click_word(word, save_screenshot_as, index)```
 
 ```word```: Required. The specified word in string format. Upper and lowercase sensitive!
