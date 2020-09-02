@@ -1,6 +1,6 @@
 # PythonOCR
 
-PythonOCR module for finding and locating words on screen, in image files or PDF files.
+PythonOCR contains functions for finding and locating words on screen, in image files or PDF files using OCR (Optical Character Recognition).
 
 **NOTE:** PythonOCR is unreliable at best when finding words in files, and should only be used as an assistance to process files. Usage of other confirmation methods (such as manual labor) is adviced, when processing important files!
 
@@ -14,7 +14,7 @@ PythonOCR utilizes the following modules:
 
 **pdf2image** to convert PDF files to image files. pdf2image is a wrapper around poppler.
 
-**pytesseract** to recognize text in image files. pytesseract requires Tesseract OCR in order to function.
+**pytesseract** to recognize text in image files. pytesseract requires **Google Tesseract OCR** in order to function.
 
 ### Python
 
@@ -140,7 +140,26 @@ Detailed examples of how to use each of these functions are provided in **Functi
 
 ### Usage in QAutoRobot
 
-Work in progress...
+Import PythonOCR module from QAutoLibrary to the robot:
+
+```
+*** Settings ***
+Library  |  QAutoLibrary.PythonOCR
+```
+
+PythonOCR functions can then be used as follows:
+
+```
+Click Word  |  ${word}
+
+Find Words  |  ${word}  |  ${file_path}
+
+Find Coordinates  |  ${word}  |  ${file_path}
+
+Verify Word  |  ${word}  |  ${file_path}
+```
+
+Detailed examples of how to use each of these functions are provided in **Functions** section.
 
 ## Functions
 
@@ -152,7 +171,9 @@ Main functions of PythonOCR library are: click_word(), find_word(), find_coordin
 
 Function takes a screenshot of the screen and searches for a specified word in it. If a single instance of the word is found, moves cursor to the coordinates of the word and clicks the location. Optionally, screenshot can be saved as a file.
 
-If multiple instances of the word are found, a specific one can be selected by index to be clicked. By default, does not click any found word, if multiple instances are found.
+If multiple instances of the word are found, a specific one can be selected by index to be clicked.
+
+By default, does not click any found word, if multiple instances are found.
 
 **NOTE:** When using this function as a keyword in Robot, providing a value for parameter ```index``` is recommended!
 
@@ -160,9 +181,13 @@ If multiple instances of the word are found, a specific one can be selected by i
 
 ```word```: Required. The specified word in string format. Upper and lowercase sensitive!
 
-```save_screenshot_as```: Optional. File name in string format for saving the screenshot. MUST include valid file type ending, such as '.jpg' or '.png'. In addition, may include absolute path or relative directory path to current project folder, where the screenshot is saved at. By default, or if empty, screenshot is not saved.
+```save_screenshot_as```: Optional. File name in string format for saving the screenshot. MUST include valid file type ending, such as '.jpg' or '.png'. Additionally, may include absolute path or relative directory path to current project folder, where the screenshot is saved at. Provided directory path MUST pre-exist!
 
-```index```: Optional. Index of the specific found word, in integer format. First found instance of the word is at position 0 (zero). By default, or if less than 0, no instance will be chosen and none of the multiple found words will be clicked.
+By default, or if empty, screenshot is not saved.
+
+```index```: Optional. Index of the specific found word, in integer format. First found instance of the word is at position 0 (zero).
+
+By default, or if less than 0, no instance will be chosen and none of the multiple found words will be clicked.
 
 **Examples:**
 
@@ -170,11 +195,19 @@ If multiple instances of the word are found, a specific one can be selected by i
 
 ```PythonOCR.click_word("Python", "screenshot.png")``` As above, but the screenshot is saved to the current project directory as 'screenshot.png'.
 
-```PythonOCR.click_word("Python", "./screenshots/screenshot.png")``` As above, but the screenshot is saved to 'screenshots' folder in the current project directory.
+```PythonOCR.click_word("Python", "./screenshots/screenshot.png")``` As above, but the screenshot is saved to folder 'screenshots' in the current project directory.
 
 ```PythonOCR.click_word("Python", "C:/project_folder/screenshots/screenshot.png")``` As above, but the screenshot is saved to the specific directory.
 
 ```PythonOCR.click_word("Python", index=0)``` Searches for the word on screen and if finds multiple instances of the word, clicks the first found instance (at index position 0 (zero)). Screenshot is not saved.
+
+**QAutoRobot:** ```Click Word  |  ${word}  |  ${screenshot_file}  |  ${index}```
+
+```Click Word  |  Python``` Searches for word 'Python' on screen and if a single instance is found, clicks its location. Screenshot is not saved.
+
+```Click Word  |  Python  |  ./images/screenshot.png``` As above, but the screenshot is saved to folder 'images' in the current robot directory.
+
+```Click Word  |  Python  |  index=0``` Searches for the word on screen and if finds multiple instances of the word, clicks the first found instance (at index position 0 (zero)). Screenshot is not saved.
 
 ### Function: find_words()
 
@@ -186,7 +219,9 @@ Function searches for all instances of a specific word in image or PDF file. Con
 
 ```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
 
-```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. By default, current project directory.
+```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. Provided directory path MUST pre-exist!
+
+By default, current project directory.
 
 **Returns:**
 
@@ -194,19 +229,27 @@ A list of found instances of the word as a list of dictionaries. Each dictionary
 
 **Examples:**
 
-```PythonOCR.find_words("Python", "image_file.png")``` Returns all found instances of the word 'Python' in 'image_file.png'.
+```PythonOCR.find_words("Python", "image_file.png")``` Returns all found instances of the word 'Python' in file 'image_file.png'.
 
 ```results_list = PythonOCR.find_words("Python", "image_file.png")``` As above, but the results are assigned to 'results_list' variable.
 
 ```print(PythonOCR.find_words("Python", "image_file.png"))``` As above, but the results are printed to console.
 
-```PythonOCR.find_words("Python", "./project_files/image_file.png")``` Returns all found instances of the word in 'image_file.png' located in 'project_files' folder in the current project directory.
+```PythonOCR.find_words("Python", "./project_files/image_file.png")``` Returns all found instances of the word in file 'image_file.png' located in folder 'project_files' in the current project directory.
 
-```PythonOCR.find_words("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' in 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
+```PythonOCR.find_words("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' in file 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
 
-```PythonOCR.find_words("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to 'output' folder in the current project directory.
+```PythonOCR.find_words("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to folder 'output' in the current project directory.
 
 ```PythonOCR.find_words("Python", "C:/projet_folder/pdf_file.pdf", "C:/project_folder/output")``` As above, but file path and output folder for images are provided as absolute file paths.
+
+**QAutoRobot:** ```Find Words  |  ${word}  |  ${file_path}  |  ${output_path}```
+
+```@{results_list} =  |  Find Words  |  Python  |  ./images/screenshot.png``` Found instances of the word 'Python' in file are assigned to list 'results_list'. The file 'screenshot.png' is located in folder 'images' in the current robot directory.
+
+```@{results_list} =  |  Find Words  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``` As above, but the images converted from file 'pdf_file.pdf' are saved to folder 'images' in the current robot directory.
+
+Returned data can be accessed as follows: ```${list[index]["key"]}```
 
 ### Function: find_coordinates()
 
@@ -218,7 +261,9 @@ Function searches for all instances of a specified word and their coordinates in
 
 ```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
 
-```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. By default, current project directory.
+```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. Provided directory path MUST pre-exist!
+
+By default, current project directory.
 
 **Returns:**
 
@@ -226,19 +271,27 @@ A list of found instances of the word and their coordinates as a list of diction
 
 **Examples:**
 
-```PythonOCR.find_coordinates("Python", "image_file.png")``` Returns all instances of the word 'Python' and their coordinates in 'image_file.png'.
+```PythonOCR.find_coordinates("Python", "image_file.png")``` Returns all instances of the word 'Python' and their coordinates in file 'image_file.png'.
 
 ```results_list = PythonOCR.find_coordinates("Python", "image_file.png")``` As above, but the results are assigned to 'results_list' variable.
 
 ```print(PythonOCR.find_coordinates("Python", "image_file.png"))``` As above, but the results are printed to console.
 
-```PythonOCR.find_coordinates("Python", "./project_files/image_file.png")``` Returns all found instances of the word and their coordinates in 'image_file.png' located in 'project_files' folder in the current project directory.
+```PythonOCR.find_coordinates("Python", "./project_files/image_file.png")``` Returns all found instances of the word and their coordinates in file 'image_file.png' located in folder 'project_files' in the current project directory.
 
-```PythonOCR.find_coordinates("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' and their coordinates in 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
+```PythonOCR.find_coordinates("Python", "pdf_file.pdf")``` Returns all found instances of the word 'Python' and their coordinates in file 'pdf_file.pdf'. Images converted from the PDF file are saved to the current project directory.
 
-```PythonOCR.find_coordinates("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to 'output' folder in the current project directory.
+```PythonOCR.find_coordinates("Python", "pdf_file.pdf", "./output")``` As above, but images are saved to folder 'output' in the current project directory.
 
 ```PythonOCR.find_coordinates("Python", "C:/projet_folder/pdf_file.pdf", "C:/project_folder/output")``` As above, but file path and output folder for images are provided as absolute file paths.
+
+**QAutoRobot:** ```Find Coordinates  |  ${word}  |  ${file_path}  |  ${output_path}```
+
+```@{results_list} =  |  Find Coordinates  |  Python  |  ./images/screenshot.png``` Found instances of the word 'Python' and their coordinates in file are assigned to list 'results_list'. The file 'screenshot.png' is located in folder 'images' in the current robot directory.
+
+```@{results_list} =  |  Find Coordinates  |  Python  |  ./resource_files/pdf_file.pdf  |  ./images/``` As above, but the images converted from file 'pdf_file.pdf' are saved to folder 'images' in the current robot directory.
+
+Returned data can be accessed as follows: ```${list[index]["key"]}```
 
 ### Function: verify_word()
 
@@ -256,12 +309,16 @@ Bool: True if found at least one instance of the specified word, False if none.
 
 **Examples:**
 
-```PythonOCR.verify_word("Python", "image_file.png")``` Returns True or False if finds any instances of the word 'Python' in 'image_file.png'.
+```PythonOCR.verify_word("Python", "image_file.png")``` Returns True or False if finds any instances of the word 'Python' in file 'image_file.png'.
 
 ```found_word = PythonOCR.verify_word("Python", "image_file.png")``` As above, but the result is assigned to 'found_word' variable.
 
 ```print(PythonOCR.verify_word("Python", "image_file.png"))``` As above, but the result is printed to console.
 
-```PythonOCR.verify_word("Python", "./project_files/image_file.png")``` Returns the result regarding the 'image_file.png' located in 'project_files' folder in the current project directory.
+```PythonOCR.verify_word("Python", "./project_files/image_file.png")``` Returns the result regarding the file 'image_file.png' located in folder 'project_files' in the current project directory.
 
 ```PythonOCR.verify_word("Python", "C:/project_folder/project_files/image_file.png")``` As above, but the file path is provided as an absolute path.
+
+**QAutoRobot:** ```Verify Word  |  ${word}  |  ${file_path}```
+
+```${found_word} =  |  Verify Word  |  Python  |  ./images/screenshot.png``` Assigns True or False to variable 'found_word' if finds any instances of the word 'Python' in file 'screenshot.png' located in folder 'images' in the current robot directory.
