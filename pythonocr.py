@@ -67,7 +67,7 @@ def _get_word_coordinates_from_data(word, image_data, page_number=1):
     # 'image_data' is a dictionary of lists.
     # Accessing specific data list in dictionary:  image_data[<dictionary_key>]
     # Accessing specific data in a list, by index: image_data[<dictionary_key>][<index>]
-    number_of_items = len(image_data["level"])
+    number_of_items = len(image_data["text"])
     for index in range(number_of_items):
         text = image_data["text"][index]
 
@@ -212,8 +212,8 @@ def click_word(word, save_screenshot_as="", index=-1):
         warnings.warn(warning_message, RuntimeWarning)
 
     else:
-        print("pythonocr.click_word({param}): Found no instances of the word '{param}' on screen."
-              .format(param=word))
+        raise NoInstancesFoundError("pythonocr.click_word({param}): Found no instances of the word '{param}' on screen."
+                                    .format(param=word))
 
 
 def find_words(word, file_path, output_path="./"):
@@ -373,4 +373,8 @@ class InvalidFileTypeError(PythonOCRError):
 
 class InvalidImageTypeError(InvalidFileTypeError):
     """Error raised when given file is not a valid image file."""
+    pass
+
+class NoInstancesFoundError(PythonOCRError):
+    """Error raised when no instances of the word are found."""
     pass

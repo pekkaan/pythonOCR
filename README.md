@@ -2,6 +2,8 @@
 
 PythonOCR contains functions for finding and locating words on screen, in image files or PDF files using OCR (Optical Character Recognition).
 
+**NOTE:** PythonOCR is unreliable at best when finding words in files, and should only be used as an assistance to process files. Usage of other confirmation methods (such as manual labor) is adviced, when processing important files!
+
 ## Prerequisites
 
 PythonOCR utilizes the following modules:
@@ -32,6 +34,8 @@ More information at: https://pypi.org/project/PyAutoGUI/
 
 ### poppler
 
+**Windows:**
+
 Download the latest poppler release (.zip file) from: https://github.com/oschwartz10612/poppler-windows/releases/
 
 More information at: https://github.com/oschwartz10612/poppler-windows
@@ -41,6 +45,18 @@ More information at: https://github.com/oschwartz10612/poppler-windows
 2. Add the poppler folder ('poppler-xx') to your Program Files. (For example, to: ```C:\Program Files (x86)\Poppler\ ```.)
 
 3. Include the 'poppler-xx\bin' folder as a SYSTEM PATH environment variable. (For example, add: ```C:\Program Files (x86)\Poppler\poppler-0.90.1\bin``` to PATH.)
+
+**Linux:**
+
+**NOTE:** Installing poppler is not be neccessarily needed, if ```pdftoppm``` and ```pdftocairo``` are installed.
+
+To install poppler on Ubuntu:
+
+```
+sudo apt install poppler-utils
+```
+
+More information at: https://pdf2image.readthedocs.io/en/latest/installation.html
 
 ### pdf2image
 
@@ -56,11 +72,21 @@ More information at: https://pypi.org/project/pdf2image/ and https://github.com/
 
 ### Tesseract OCR
 
+More information at: https://github.com/tesseract-ocr/tessdoc
+
+**Windows:**
+
 Install Google Tesseract OCR and include Finnish. **Add Tesseract-OCR to PATH.**
 
 Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
 
-More information at: https://github.com/tesseract-ocr/tessdoc
+**Linux:**
+
+Install Tesseract OCR using the command:
+
+```
+sudo apt install tesseract-ocr
+```
 
 ### pytesseract
 
@@ -73,6 +99,16 @@ pip install pytesseract
 ```
 
 More information at: https://pypi.org/project/pytesseract/
+
+**Permission Error (Linux):**
+
+If the attempt to install pytesseract on Linux resulted in Permission error, you can attempt to install pytesseract on access-level where you have persmissions.
+
+To install to a user-specific directory, use ```--user``` flag. For example, to install pytesseract to user-specific directory as Python 3.7 module:
+
+```
+python3.7 -m pip install --user pytesseract
+```
 
 ## Installing
 
@@ -138,6 +174,8 @@ Function takes a screenshot of the screen and searches for a specified word in i
 If multiple instances of the word are found, a specific one can be selected by index to be clicked.
 
 By default, does not click any found word, if multiple instances are found.
+
+**NOTE:** When using this function as a keyword in Robot, providing a value for parameter ```index``` is recommended!
 
 **Parameters:** ```click_word(word, save_screenshot_as, index)```
 
