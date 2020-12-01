@@ -193,9 +193,9 @@ Returns an empty list if no data was found.
 
 **Examples:**
 
-```get_file_data("Python", "image_file.png")``` Returns found data from file.
+```get_file_data("image_file.png")``` Returns found data from file.
 
-```get_file_data("./project_files/pdf_file.pdf", "./output")``` Return found data from the file located in folder 'project_files' in current working directory. Images from '.pdf' file are saved to folder 'output' in the current project directory.
+```get_file_data("./project_files/pdf_file.pdf", "./output")``` Returns found data from the file located in folder 'project_files' in current working directory. Images from '.pdf' file are saved to folder 'output' in the current project directory.
 
 Returned data usage:
 
