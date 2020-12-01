@@ -76,9 +76,11 @@ More information at: https://github.com/tesseract-ocr/tessdoc
 
 **Windows:**
 
-Install Google Tesseract OCR and include Finnish. **Add Tesseract-OCR to PATH.**
+1. Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
 
-Download Tesseract OCR: https://github.com/UB-Mannheim/tesseract/wiki
+2. Install Google Tesseract OCR and include Additional language data.
+
+3. Include Tesseract OCR as a SYSTEM PATH environment variable.
 
 **Linux:**
 
@@ -127,6 +129,8 @@ from QAutoLibrary import PythonOCR
 PythonOCR functions can then be used as follows:
 
 ```
+PythonOCR.get_file_data(<file path>)
+
 PythonOCR.click_word(<word>)
 
 PythonOCR.find_words(<word>, <file path>)
@@ -150,6 +154,8 @@ Library  |  QAutoLibrary.PythonOCR
 PythonOCR functions can then be used as follows:
 
 ```
+Get File Data  |  ${file_path}
+
 Click Word  |  ${word}
 
 Find Words  |  ${word}  |  ${file_path}
@@ -163,9 +169,44 @@ Detailed examples of how to use each of these functions are provided in **Functi
 
 ## Functions
 
-Main functions of PythonOCR library are: click_word(), find_word(), find_coordinates(), verify_word().
+Main functions of PythonOCR library are: get_file_data(), click_word(), find_word(), find_coordinates(), verify_word().
 
 **NOTE:** Provide file paths and directory paths in string format to function parameters. Include file type endings, such as '.jpg' or '.png', when providing file paths.
+
+### Function: get_file_data()
+
+Function returns OCR-data found from the specified file, by using pytesseract.image_to_data(). Converts a PDF file to image(s) in order to read data. Able to handle '.jpg', '.jpeg', '.png', and '.pdf' files.
+
+**Parameters:** ```get_file_data(file_path, output_path)```
+
+```file_path```: Required. Image or PDF file path in string format. Can be absolute or relative to the current project directory.
+
+```output_path```: Output directory in string format for image files converted from the PDF file. Not required if processing image files. Provided directory path MUST pre-exist!
+
+By default, current project directory.
+
+**Returns:**
+
+A list for images, containing dictionaries for data, which contain lists for each found text instance. Examples of how to use the returned data are given in the examples below.
+
+Returns an empty list if no data was found.
+
+**Examples:**
+
+```get_file_data("Python", "image_file.png")``` Returns found data from file.
+
+```get_file_data("./project_files/pdf_file.pdf", "./output")``` Return found data from the file located in folder 'project_files' in current working directory. Images from '.pdf' file are saved to folder 'output' in the current project directory.
+
+Returned data usage:
+
+```
+data = pythonocr.get_file_data(...)
+data[<image>][<dictionary>][<index>]
+```
+
+```data[0]["text"][1]``` Access first image's second recognized text's 'text'-data.
+
+```data[2]["left"][0]``` Access third image's first recognized text's X-coordinate data ('left').
 
 ### Function: click_word()
 
